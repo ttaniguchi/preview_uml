@@ -1,0 +1,30 @@
+@startuml login
+
+actor 管理者 as U
+participant ブラウザ as F
+participant サーバー as S
+
+note over U : ログイン操作
+
+U -> F ++ : サイトアクセス
+note over F : 要認証ページ
+F -> S ++ : API実行（jwt_token[expired]）
+note over S : 認証状態チェックAPI
+F <- S -- : 認証失敗
+F -> F : リダイレクト
+
+note over F : ログイン画面
+U -> F : 入力（email/password）
+F -> S ++ : API実行（email/password）
+note over S : ログインAPI
+F <- S -- : 認証成功（jwt_token）
+F -> F : リダイレクト
+
+note over F : ホーム画面
+F -> S ++ : API実行（jwt_token）
+note over S : 認証状態チェックAPI
+F <- S -- : 認証成功
+
+== ログイン成功 ==
+
+@enduml
